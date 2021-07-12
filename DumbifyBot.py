@@ -7,6 +7,8 @@ from telegram import InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import InlineQueryHandler
 import random
 
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
 PORT = int(os.environ.get('PORT', 5000))
 
 updater = Updater(token='1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8', use_context=True)
