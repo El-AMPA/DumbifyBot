@@ -9,11 +9,7 @@ import random
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger()
-
 PORT = int(os.environ.get('PORT', 5000))
-
-updater = Updater(token='1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8', use_context=True)
-dispatcher = updater.dispatcher
 
 def dumbify(chain):
     chain = chain.lower()
@@ -34,20 +30,8 @@ def dumbify(chain):
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="To use this bot, write @DumbifyBot followed by your message. For long messages just send me the text in private and I will dumbify it. Enjoy!")
 
-
-start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
-
-updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path='1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8')
-updater.bot.setWebhook('https://desolate-citadel-02620.herokuapp.com/' + '1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8')
-
 def dumbifyMessage(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=dumbify(update.message.text))
-
-
-dumbify_handler = MessageHandler(Filters.text & (~Filters.command), dumbifyMessage)
-dispatcher.add_handler(dumbify_handler)
-
 
 def inline_dumbify(update, context):
     query = update.inline_query.query.lower()
@@ -66,6 +50,34 @@ def inline_dumbify(update, context):
     )
     context.bot.answer_inline_query(update.inline_query.id, results)
 
+def main():
+    """Start the bot."""
+    # Create the Updater and pass it your bot's token.
+    # Make sure to set use_context=True to use the new context based callbacks
+    # Post version 12 this will no longer be necessary
+    updater = Updater(
+        token='1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8', use_context=True)
 
-inline_dumbify_handler = InlineQueryHandler(inline_dumbify)
-dispatcher.add_handler(inline_dumbify_handler)
+    # Get the dispatcher to register handlers
+    dp = updater.dispatcher
+
+    # handler adding
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.text & (~Filters.command), dumbifyMessage))
+    dp.add_handler(InlineQueryHandler(inline_dumbify))
+
+    # log all errors
+    # dp.add_error_handler(error)
+
+    # Start the Bot
+    updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path='1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8')
+    updater.bot.setWebhook('https://desolate-citadel-02620.herokuapp.com/' + '1704982427:AAFL55HPUrj65dEG3mxraxbsNsqCGLINGp8')
+
+    # Run the bot until you press Ctrl-C or the process receives SIGINT,
+    # SIGTERM or SIGABRT. This should be used most of the time, since
+    # start_polling() is non-blocking and will stop the bot gracefully.
+    updater.idle()
+
+
+if __name__ == '__main__':
+    main()
