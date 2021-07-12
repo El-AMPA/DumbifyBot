@@ -1,1 +1,1 @@
-web: python3 DumbifyBot.py
+web: python DumbifyBot.py
