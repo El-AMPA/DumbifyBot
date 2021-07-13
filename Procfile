@@ -1,1 +1,1 @@
-worker: python DumbifyBot.py
+worker: python bot.py
