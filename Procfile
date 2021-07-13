@@ -1,1 +1,1 @@
-web: python DumbifyBot.py
+worker: python DumbifyBot.py
